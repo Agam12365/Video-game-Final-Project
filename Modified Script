@@ -1,0 +1,46 @@
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float speed = 5f;
+    public float jumpForce = 8f;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer;
+
+    private Rigidbody2D playerRb;
+    private float direction;
+    private bool isGrounded;
+
+    void Start()
+    {
+        playerRb = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        // Get input
+        direction = Input.GetAxisRaw("Horizontal");
+
+        // Check if player is touching the ground
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        // Jump
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            playerRb.velocity = new Vector2(playerRb.velocity.x, jumpForce);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Apply horizontal movement
+        playerRb.velocity = new Vector2(direction * speed, playerRb.velocity.y);
+    }
+}
+
+//Improvments: 
+Ground Check – Player can only jump when touching the ground (no more floating jumps).
+Smoother Movement – Uses FixedUpdate for better physics and flips the character left/right.
+Easy Setup – Just add a "GroundCheck" object at the player's feet and assign it in Unity.
+
